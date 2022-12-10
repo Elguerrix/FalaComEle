@@ -26,7 +26,7 @@
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer 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'
+              'Authorization': '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'
             },
             body: JSON.stringify({
               prompt: transcript,
@@ -34,11 +34,18 @@
               temperature: 0.5
             })
           }).then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to generate response from ChatGPT');
+            }
             return response.json();
           }).then((response) => {
             // Add the ChatGPT response to the chat container
             const chatContainer = document.getElementById('chat-container');
             chatContainer.innerHTML += `<p>ChatGPT: ${response.data.text}</p>`;
+          }).catch((error) => {
+            // Add an error message to the chat container
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML += `<p>Error: ${error.message}</p>`;
           });
         }
         recognition.start();
