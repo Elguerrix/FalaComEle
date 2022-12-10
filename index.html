@@ -22,7 +22,7 @@
           const transcript = event.results[0][0].transcript;
 
           // Send the transcript to ChatGPT and get a response
-          fetch('http://api.openai.com/v1/models/chatgpt/generate', {
+          fetch('https://api.openai.com/v1/models/chatgpt/generate', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
