@@ -4,54 +4,47 @@
   </head>
   <body>
     <h1>ChatGPT Bot</h1>
-    <p>Welcome to the ChatGPT Bot. To start using the bot, simply press the "Start" button below and start speaking. When you want to stop the bot, press the "Stop" button.</p>
-    <button id="start-button">Start</button>
-    <button id="stop-button">Stop</button>
+    <p>Welcome to the ChatGPT Bot. To start using the bot, simply type your message in the input field below and press the "Send" button.</p>
+    <input type="text" id="message-input" placeholder="Enter your message here"></input>
+    <button id="send-button">Send</button>
     <div id="chat-container"></div>
     <script>
-      // Set up the start and stop buttons
-      const startButton = document.getElementById('start-button');
-      const stopButton = document.getElementById('stop-button');
-      startButton.addEventListener('click', () => {
-        // Start listening for voice input
-        const recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.onresult = (event) => {
-          // Get the transcript of the user's speech
-          const transcript = event.results[0][0].transcript;
+      // Set up the send button
+      const sendButton = document.getElementById('send-button');
+      sendButton.addEventListener('click', () => {
+        // Get the text from the input field
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value;
 
-          // Send the transcript to ChatGPT and get a response
-          fetch('https://api.openai.com/v1/models/chatgpt/generate', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer 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'
-            },
-            body: JSON.stringify({
-              prompt: transcript,
-              max_tokens: 128,
-              temperature: 0.5
-            })
-          }).then((response) => {
-            if (!response.ok) {
-              throw new Error('Failed to generate response from ChatGPT');
-            }
-            return response.json();
-          }).then((response) => {
-            // Add the ChatGPT response to the chat container
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML += `<p>ChatGPT: ${response.data.text}</p>`;
-          }).catch((error) => {
-            // Add an error message to the chat container
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML += `<p>Error: ${error.message}</p>`;
-          });
-        }
-        recognition.start();
-      });
-      stopButton.addEventListener('click', () => {
-        recognition.stop();
+        // Send the message to ChatGPT and get a response
+        fetch('https://api.openai.com/v1/models/chatgpt/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': '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'
+          },
+          body: JSON.stringify({
+            prompt: message,
+            max_tokens: 128,
+            temperature: 0.5
+          })
+        }).then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to generate response from ChatGPT');
+          }
+          return response.json();
+        }).then((response) => {
+          // Add the ChatGPT response to the chat container
+          const chatContainer = document.getElementById('chat-container');
+          chatContainer.innerHTML += `<p>ChatGPT: ${response.data.text}</p>`;
+        }).catch((error) => {
+          // Add an error message to the chat container
+          const chatContainer = document.getElementById('chat-container');
+          chatContainer.innerHTML += `<p>Error: ${error.message}</p>`;
+        });
+
+        // Clear the input field
+        messageInput.value = '';
       });
     </script>
   </body>
