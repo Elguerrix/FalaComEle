@@ -1,33 +1,46 @@
 <html>
   <head>
-    <title>GPT-3 Chat with Google Voice Activation</title>
-    <script>
-      // Initialize the Web Speech API
-      var recognition = new webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      // Set the language for the voice recognition
-      recognition.lang = "en-US";
-
-      // This function is called when the user speaks
-      recognition.onresult = function(event) {
-        var input = event.results[event.results.length-1][0].transcript;
-        // Use the GPT-3 chat to process the user's input
-        gpt3Chat(input, function(response) {
-          // Use the Web Speech API to speak the GPT-3 chat's response
-          var speech = new SpeechSynthesisUtterance(response);
-          window.speechSynthesis.speak(speech);
-        });
-      };
-
-      // This function starts the voice recognition
-      function startListening() {
-        recognition.start();
-      }
-    </script>
+    <title>ChatGPT Bot</title>
   </head>
   <body>
-    <button onclick="startListening()">A escutar</button>
+    <h1>ChatGPT Bot</h1>
+    <p>Welcome to the ChatGPT Bot. To start using the bot, simply press the button below and start speaking.</p>
+    <button id="start-button">Start</button>
+    <div id="chat-container"></div>
+    <script>
+      // Set up the start button
+      const startButton = document.getElementById('start-button');
+      startButton.addEventListener('click', () => {
+        // Start listening for voice input
+        const recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.onresult = (event) => {
+          // Get the transcript of the user's speech
+          const transcript = event.results[0][0].transcript;
+
+          // Send the transcript to ChatGPT and get a response
+          fetch('https://api.openai.com/v1/models/chatgpt/generate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer YOUR_API_KEY'
+            },
+            body: JSON.stringify({
+              prompt: transcript,
+              max_tokens: 128,
+              temperature: 0.5
+            })
+          }).then((response) => {
+            return response.json();
+          }).then((response) => {
+            // Add the ChatGPT response to the chat container
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML += `<p>ChatGPT: ${response.data.text}</p>`;
+          });
+        }
+        recognition.start();
+      });
+    </script>
   </body>
 </html>
