@@ -4,15 +4,16 @@
   </head>
   <body>
     <h1>ChatGPT Bot</h1>
-    <p>Welcome to the ChatGPT Bot. To start using the bot, simply type your message in the input field below and press the "Send" button.</p>
-    <input type="text" id="message-input" placeholder="Enter your message here"></input>
+    <p>Welcome to the ChatGPT Bot. To start using the bot, simply enter your message in the text input field below and press the "Send" button. The bot will respond with a generated response using the ChatGPT model.</p>
+    <label for="message-input">Message:</label>
+    <input type="text" id="message-input" />
     <button id="send-button">Send</button>
     <div id="chat-container"></div>
     <script>
       // Set up the send button
       const sendButton = document.getElementById('send-button');
       sendButton.addEventListener('click', () => {
-        // Get the text from the input field
+        // Get the message from the text input field
         const messageInput = document.getElementById('message-input');
         const message = messageInput.value;
 
@@ -34,17 +35,14 @@
           }
           return response.json();
         }).then((response) => {
-          // Add the ChatGPT response to the chat container
+          // Add the user's message and the ChatGPT response to the chat container
           const chatContainer = document.getElementById('chat-container');
-          chatContainer.innerHTML += `<p>ChatGPT: ${response.data.text}</p>`;
+          chatContainer.innerHTML += `<p>You: ${message}</p><p>ChatGPT: ${response.data.text}</p>`;
         }).catch((error) => {
           // Add an error message to the chat container
           const chatContainer = document.getElementById('chat-container');
           chatContainer.innerHTML += `<p>Error: ${error.message}</p>`;
         });
-
-        // Clear the input field
-        messageInput.value = '';
       });
     </script>
   </body>
