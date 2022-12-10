@@ -4,12 +4,14 @@
   </head>
   <body>
     <h1>ChatGPT Bot</h1>
-    <p>Welcome to the ChatGPT Bot. To start using the bot, simply press the button below and start speaking.</p>
+    <p>Welcome to the ChatGPT Bot. To start using the bot, simply press the "Start" button below and start speaking. When you want to stop the bot, press the "Stop" button.</p>
     <button id="start-button">Start</button>
+    <button id="stop-button">Stop</button>
     <div id="chat-container"></div>
     <script>
-      // Set up the start button
+      // Set up the start and stop buttons
       const startButton = document.getElementById('start-button');
+      const stopButton = document.getElementById('stop-button');
       startButton.addEventListener('click', () => {
         // Start listening for voice input
         const recognition = new webkitSpeechRecognition();
@@ -40,6 +42,9 @@
           });
         }
         recognition.start();
+      });
+      stopButton.addEventListener('click', () => {
+        recognition.stop();
       });
     </script>
   </body>
