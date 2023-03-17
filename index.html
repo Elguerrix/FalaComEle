@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>My WAX NFT Gallery</title>
+    <style>
+      .nft-image {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>My WAX NFT Gallery</h1>
+    <div id="nft-gallery"></div>
+    <script src="https://cdn.jsdelivr.net/npm/waxjs/dist/waxjs.min.js"></script>
+    <script>
+      const { Api, JsonRpc } = waxjs;
+      const rpc = new JsonRpc('https://wax.greymass.com', { fetch });
+      const wax = new Api({ rpc });
+
+      const account = 'myaccount';
+
+      async function getNFTs() {
+        const nfts = await wax.rpc.get_table_rows({
+          code: 'atomicassets',
+          scope: account,
+          table: 'sassets',
+          limit: 1000
+        });
+
+        return nfts.rows;
+      }
+
+      async function displayNFTs() {
+        const nfts = await getNFTs();
+
+        const gallery = document.getElementById('nft-gallery');
+
+        nfts.forEach(nft => {
+          const img = document.createElement('img');
+          img.src = nft.data.img;
+          img.alt = nft.data.name;
+          img.classList.add('nft-image');
+
+          gallery.appendChild(img);
+        });
+      }
+
+      displayNFTs();
+    </script>
+  </body>
+</html>
