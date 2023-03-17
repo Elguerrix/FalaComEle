@@ -1,2 +1,2 @@
-# FalaComEle
+# WAX NFTS  
 O nome diz tudo...
